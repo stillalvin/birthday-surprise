@@ -162,34 +162,50 @@ function initializePWA() {
             });
     }
 
-    // Add to Home Screen Prompt
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // Show our custom install prompt
-        installPrompt.classList.remove('hidden');
-        installPrompt.classList.add('active');
-    });
+    // Check if it's Safari on iOS
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // Handle install button click
-    installButton.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
-            deferredPrompt = null;
+    if (isSafari && isIOS) {
+        // Show Safari install prompt
+        const safariPrompt = document.getElementById('safari-install-prompt');
+        const closeSafariPrompt = document.getElementById('close-safari-prompt');
+        
+        safariPrompt.classList.remove('hidden');
+        
+        closeSafariPrompt.addEventListener('click', () => {
+            safariPrompt.classList.add('hidden');
+        });
+    } else {
+        // Handle regular PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show our custom install prompt
+            installPrompt.classList.remove('hidden');
+            installPrompt.classList.add('active');
+        });
+
+        // Handle install button click
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+                installPrompt.classList.remove('active');
+                installPrompt.classList.add('hidden');
+            }
+        });
+
+        // Handle close button click
+        closeInstallPrompt.addEventListener('click', () => {
             installPrompt.classList.remove('active');
             installPrompt.classList.add('hidden');
-        }
-    });
-
-    // Handle close button click
-    closeInstallPrompt.addEventListener('click', () => {
-        installPrompt.classList.remove('active');
-        installPrompt.classList.add('hidden');
-    });
+        });
+    }
 
     // Hide prompt if app is already installed
     window.addEventListener('appinstalled', () => {

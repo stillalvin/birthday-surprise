@@ -15,6 +15,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Gift from Alvin">
     
+    <!-- Safari PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image" href="images/gift.png">
+    
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     
@@ -139,6 +144,22 @@
                 <i class="fas fa-plus"></i> Add to Home Screen
             </button>
             <button id="close-install-prompt">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Safari Install Instructions -->
+    <div id="safari-install-prompt" class="hidden">
+        <div class="safari-install-content">
+            <h3>Add to Home Screen</h3>
+            <p>To install this gift on your iPhone:</p>
+            <ol>
+                <li>Tap the Share button <i class="fas fa-share-square"></i></li>
+                <li>Scroll down and tap "Add to Home Screen"</li>
+                <li>Tap "Add" to install</li>
+            </ol>
+            <button id="close-safari-prompt">
                 <i class="fas fa-times"></i>
             </button>
         </div>

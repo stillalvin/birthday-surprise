@@ -381,4 +381,72 @@ section {
         top: 0.5rem;
         right: 0.5rem;
     }
+}
+
+/* Safari Install Prompt */
+#safari-install-prompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.safari-install-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.safari-install-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.safari-install-content p {
+    margin-bottom: 1rem;
+}
+
+.safari-install-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.safari-install-content li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.safari-install-content i {
+    color: var(--primary-color);
+    margin: 0 0.25rem;
+}
+
+#close-safari-prompt {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+#close-safari-prompt:hover {
+    opacity: 1;
 } 
