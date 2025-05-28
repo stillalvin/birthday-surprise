@@ -388,125 +388,85 @@ section {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    z-index: 2000;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 1rem;
+    align-items: center;
+    z-index: 1000;
 }
 
 .safari-install-content {
     background: white;
     padding: 2rem;
     border-radius: 15px;
-    max-width: 400px;
-    width: 100%;
-    position: relative;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    width: 400px;
+    text-align: left;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .safari-install-content h3 {
-    color: var(--primary-color);
+    color: #ff69b4;
     margin-bottom: 1rem;
-    text-align: center;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .safari-install-content p {
     margin-bottom: 1rem;
+    color: #333;
 }
 
 .safari-install-content ol {
+    margin: 1rem 0;
     padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
 }
 
 .safari-install-content li {
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
+    margin-bottom: 0.8rem;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .safari-install-content i {
-    color: var(--primary-color);
-    margin: 0 0.25rem;
+    color: #ff69b4;
 }
 
-#close-safari-prompt {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--text-color);
-    cursor: pointer;
+.safari-note {
+    font-style: italic;
+    color: #666;
+    margin-top: 1rem;
     padding: 0.5rem;
-    font-size: 1.2rem;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
+    background: #f8f8f8;
+    border-radius: 5px;
 }
 
-#close-safari-prompt:hover {
-    opacity: 1;
-}
-
-/* Install Success Message */
-#install-success {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 2000;
+.safari-close-button {
+    background: #ff69b4;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
 }
 
-.success-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    max-width: 400px;
-    width: 100%;
-    position: relative;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    text-align: center;
+.safari-close-button:hover {
+    background: #ff1493;
+    transform: translateY(-2px);
 }
 
-.success-content i {
-    font-size: 3rem;
-    color: #4CAF50;
-    margin-bottom: 1rem;
-}
-
-.success-content h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-.success-content p {
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-#close-success {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 0.5rem;
-    font-size: 1.2rem;
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-}
-
-#close-success:hover {
-    opacity: 1;
+.safari-close-button i {
+    color: white;
 } 

@@ -19,8 +19,6 @@ const wishesForm = document.getElementById('wishes-form');
 const installPrompt = document.getElementById('install-prompt');
 const installButton = document.getElementById('install-button');
 const closeInstallPrompt = document.getElementById('close-install-prompt');
-const installSuccess = document.getElementById('install-success');
-const closeSuccess = document.getElementById('close-success');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -164,16 +162,34 @@ function initializePWA() {
             });
     }
 
-    // Check if it's Safari on iOS
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    // Improved Safari detection
+    const isSafari = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        return ua.includes('safari') && !ua.includes('chrome');
+    };
 
-    if (isSafari && isIOS) {
-        // Show Safari install prompt
+    const isIOS = () => {
+        return [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+        ].includes(navigator.platform)
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+    };
+
+    // Show appropriate prompt based on browser
+    if (isSafari() && isIOS()) {
+        console.log('Safari on iOS detected');
         const safariPrompt = document.getElementById('safari-install-prompt');
         const closeSafariPrompt = document.getElementById('close-safari-prompt');
         
-        safariPrompt.classList.remove('hidden');
+        // Show prompt after a short delay to ensure the page is loaded
+        setTimeout(() => {
+            safariPrompt.classList.remove('hidden');
+        }, 2000);
         
         closeSafariPrompt.addEventListener('click', () => {
             safariPrompt.classList.add('hidden');
@@ -214,32 +230,6 @@ function initializePWA() {
         installPrompt.classList.remove('active');
         installPrompt.classList.add('hidden');
         deferredPrompt = null;
-    });
-
-    // Handle install success
-    let deferredPrompt;
-    const installSuccess = document.getElementById('install-success');
-    const closeSuccess = document.getElementById('close-success');
-
-    // Listen for the beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        // Stash the event so it can be triggered later
-        deferredPrompt = e;
-    });
-
-    // Listen for the appinstalled event
-    window.addEventListener('appinstalled', (evt) => {
-        // Show the success message
-        installSuccess.style.display = 'flex';
-        // Clear the deferredPrompt
-        deferredPrompt = null;
-    });
-
-    // Close success message
-    closeSuccess.addEventListener('click', () => {
-        installSuccess.style.display = 'none';
     });
 }
 
