@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Gift from Alvin</title>
+    <meta name="description" content="A special birthday gift for my best friend">
+    <meta name="theme-color" content="#ff69b4">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Gift from Alvin">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <!-- Countdown Section -->
+    <section id="countdown-section" class="active">
+        <div class="countdown-container">
+            <h1>Counting down to your special day!</h1>
+            <div class="countdown-timer">
+                <div class="time-block">
+                    <span id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="time-block">
+                    <span id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="time-block">
+                    <span id="minutes">00</span>
+                    <span class="label">Minutes</span>
+                </div>
+                <div class="time-block">
+                    <span id="seconds">00</span>
+                    <span class="label">Seconds</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content (Hidden until countdown ends) -->
+    <section id="main-content" class="hidden">
+        <!-- Letter Section -->
+        <section id="letter-section">
+            <div class="letter-container">
+                <h2>My Dearest Friend,</h2>
+                <div id="letter-content">
+                    <!-- Letter content will be added later -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery-section">
+            <h2>Our Memories</h2>
+            <div class="gallery-container">
+                <!-- Gallery items will be added later -->
+            </div>
+        </section>
+
+        <!-- Wishes Form Section -->
+        <section id="wishes-section">
+            <h2>Make Your Wishes</h2>
+            <div class="form-container">
+                <iframe id="wishes-form" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <!-- Candle Section -->
+        <section id="candle-section">
+            <div class="candle-container">
+                <button id="blow-candle" class="candle-button">
+                    <i class="fas fa-birthday-cake"></i>
+                    Blow the Candle
+                </button>
+                <div class="candle-animation">
+                    <div class="flame"></div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- Expired Message (Hidden until after birthday) -->
+    <section id="expired-section" class="hidden">
+        <div class="expired-container">
+            <h2>Thank You!</h2>
+            <p>This special gift has expired, but our friendship never will.</p>
+        </div>
+    </section>
+
+    <!-- Audio Player -->
+    <div id="audio-player" class="hidden">
+        <audio id="birthday-song" loop>
+            <source src="" type="audio/mpeg">
+        </audio>
+        <button id="toggle-music">
+            <i class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* Global Styles */
+:root {
+    --primary-color: #ff69b4;
+    --secondary-color: #ffb6c1;
+    --text-color: #333;
+    --background-color: #fff5f7;
+    --accent-color: #ff1493;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.active {
+    display: block;
+}
+
+/* Countdown Section */
+#countdown-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.countdown-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    justify-content: center;
+}
+
+.time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.time-block span {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.time-block .label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-top: 0.5rem;
+}
+
+/* Main Content Sections */
+section {
+    padding: 4rem 2rem;
+}
+
+/* Letter Section */
+.letter-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Gallery Section */
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
+}
+
+/* Wishes Form Section */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    height: 600px;
+}
+
+#wishes-form {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Candle Section */
+.candle-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.candle-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.candle-button:hover {
+    transform: scale(1.05);
+}
+
+.candle-animation {
+    margin-top: 2rem;
+    position: relative;
+    height: 200px;
+}
+
+.flame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 100px;
+    background: linear-gradient(to top, #ff4500, #ffa500);
+    border-radius: 50% 50% 20% 20%;
+    box-shadow: 0 0 20px #ff4500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.flame.active {
+    opacity: 1;
+}
+
+/* Audio Player */
+#audio-player {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+#toggle-music {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+#toggle-music:hover {
+    transform: scale(1.1);
+}
+
+/* Expired Message */
+.expired-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 4rem auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .countdown-timer {
+        flex-wrap: wrap;
+    }
+    
+    .time-block {
+        width: calc(50% - 1rem);
+    }
+    
+    section {
+        padding: 2rem 1rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+} 
