@@ -1,11 +1,11 @@
 const CACHE_NAME = 'birthday-gift-v1';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/style.css',
-    '/scripts.js',
-    '/manifest.json',
-    '/images/gift.png'
+    '/birthday-surprise/',
+    '/birthday-surprise/index.html',
+    '/birthday-surprise/style.css',
+    '/birthday-surprise/scripts.js',
+    '/birthday-surprise/manifest.json',
+    '/birthday-surprise/images/gift.png'
 ];
 
 // Install Service Worker
@@ -59,8 +59,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     const options = {
         body: 'Alvin made you something special!',
-        icon: '/images/gift.png',
-        badge: '/images/gift.png',
+        icon: '/birthday-surprise/images/gift.png',
+        badge: '/birthday-surprise/images/gift.png',
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
@@ -70,7 +70,7 @@ self.addEventListener('push', (event) => {
             {
                 action: 'explore',
                 title: 'Open Gift',
-                icon: '/images/gift.png'
+                icon: '/birthday-surprise/images/gift.png'
             }
         ]
     };

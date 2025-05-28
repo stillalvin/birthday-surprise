@@ -153,7 +153,7 @@ function initializeForm() {
 // PWA Features
 function initializePWA() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('/birthday-surprise/sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
             })
@@ -206,7 +206,7 @@ function showNotification() {
             if (permission === 'granted') {
                 new Notification('🎉 Happy Birthday!', {
                     body: 'Alvin made you something special!',
-                    icon: '/images/gift.png'
+                    icon: '/birthday-surprise/images/gift.png'
                 });
             }
         });
