@@ -180,9 +180,14 @@ function initializePWA() {
         || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
     };
 
+    // Check if app is already installed
+    const isStandalone = () => {
+        return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    };
+
     // Show appropriate prompt based on browser
-    if (isSafari() && isIOS()) {
-        console.log('Safari on iOS detected');
+    if (isSafari() && isIOS() && !isStandalone()) {
+        console.log('Safari on iOS detected and not installed');
         const safariPrompt = document.getElementById('safari-install-prompt');
         const closeSafariPrompt = document.getElementById('close-safari-prompt');
         
