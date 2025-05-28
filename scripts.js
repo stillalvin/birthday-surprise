@@ -241,15 +241,61 @@ function initializePWA() {
 // Notifications
 function showNotification() {
     if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                new Notification('🎉 Happy Birthday!', {
-                    body: 'Alvin made you something special!',
-                    icon: '/birthday-surprise/images/gift.png'
+        // Request permission if not already granted
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            // Show a custom prompt first
+            const notificationPrompt = document.createElement('div');
+            notificationPrompt.className = 'notification-prompt';
+            notificationPrompt.innerHTML = `
+                <div class="notification-prompt-content">
+                    <h3><i class="fas fa-bell"></i> Enable Notifications</h3>
+                    <p>Would you like to receive a special birthday surprise when the timer ends?</p>
+                    <div class="notification-buttons">
+                        <button id="enable-notifications" class="enable-button">
+                            <i class="fas fa-check"></i> Yes, Enable
+                        </button>
+                        <button id="skip-notifications" class="skip-button">
+                            <i class="fas fa-times"></i> No, Skip
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(notificationPrompt);
+
+            // Handle enable button click
+            document.getElementById('enable-notifications').addEventListener('click', () => {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        sendBirthdayNotification();
+                    }
+                    notificationPrompt.remove();
                 });
-            }
-        });
+            });
+
+            // Handle skip button click
+            document.getElementById('skip-notifications').addEventListener('click', () => {
+                notificationPrompt.remove();
+            });
+        } else if (Notification.permission === 'granted') {
+            sendBirthdayNotification();
+        }
     }
+}
+
+function sendBirthdayNotification() {
+    const notification = new Notification('🎉 Happy Birthday!', {
+        body: 'Alvin made you something special!',
+        icon: '/birthday-surprise/images/gift.png',
+        badge: '/birthday-surprise/images/gift.png',
+        vibrate: [200, 100, 200],
+        requireInteraction: true
+    });
+
+    // Handle notification click
+    notification.onclick = function() {
+        window.focus();
+        this.close();
+    };
 }
 
 // Date Check
@@ -263,5 +309,6 @@ function checkDate() {
         showExpiredMessage();
     } else if (afterBirthday) {
         showMainContent();
+        showNotification(); // Show notification when birthday arrives
     }
 } 
