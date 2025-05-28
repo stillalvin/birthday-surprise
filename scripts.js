@@ -1,6 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2024-05-29T00:00:00');
-const GOOGLE_FORM_URL = ''; // Add your Google Form URL here
+const BIRTHDAY_DATE = new Date('2025-05-29T00:00:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -17,6 +16,9 @@ const audioPlayer = document.getElementById('audio-player');
 const birthdaySong = document.getElementById('birthday-song');
 const toggleMusicButton = document.getElementById('toggle-music');
 const wishesForm = document.getElementById('wishes-form');
+const installPrompt = document.getElementById('install-prompt');
+const installButton = document.getElementById('install-button');
+const closeInstallPrompt = document.getElementById('close-install-prompt');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializePWA();
     initializeAudio();
     initializeForm();
+    initializeCandle();
     checkDate();
 });
 
@@ -107,17 +110,50 @@ function initializeAudio() {
     }
 }
 
-// Google Form
+// Form Handling
 function initializeForm() {
-    if (GOOGLE_FORM_URL) {
-        wishesForm.src = GOOGLE_FORM_URL;
-    }
+    wishesForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitButton = wishesForm.querySelector('.submit-button');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+        try {
+            const formData = new FormData(wishesForm);
+            const response = await fetch(wishesForm.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.className = 'form-success active';
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Thank you for your wishes!</h3>
+                    <p>Your wishes have been sent successfully.</p>
+                `;
+                wishesForm.innerHTML = '';
+                wishesForm.appendChild(successMessage);
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            submitButton.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error! Try Again';
+            submitButton.disabled = false;
+        }
+    });
 }
 
 // PWA Features
 function initializePWA() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
             })
@@ -131,7 +167,35 @@ function initializePWA() {
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // You can show a custom install button here if desired
+        
+        // Show our custom install prompt
+        installPrompt.classList.remove('hidden');
+        installPrompt.classList.add('active');
+    });
+
+    // Handle install button click
+    installButton.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            deferredPrompt = null;
+            installPrompt.classList.remove('active');
+            installPrompt.classList.add('hidden');
+        }
+    });
+
+    // Handle close button click
+    closeInstallPrompt.addEventListener('click', () => {
+        installPrompt.classList.remove('active');
+        installPrompt.classList.add('hidden');
+    });
+
+    // Hide prompt if app is already installed
+    window.addEventListener('appinstalled', () => {
+        installPrompt.classList.remove('active');
+        installPrompt.classList.add('hidden');
+        deferredPrompt = null;
     });
 }
 
@@ -142,7 +206,7 @@ function showNotification() {
             if (permission === 'granted') {
                 new Notification('🎉 Happy Birthday!', {
                     body: 'Alvin made you something special!',
-                    icon: '/images/icon-192x192.png'
+                    icon: '/images/gift.png'
                 });
             }
         });

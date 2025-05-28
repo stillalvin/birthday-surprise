@@ -5,8 +5,7 @@ const ASSETS_TO_CACHE = [
     '/style.css',
     '/scripts.js',
     '/manifest.json',
-    '/images/icon-192x192.png',
-    '/images/icon-512x512.png'
+    '/images/gift.png'
 ];
 
 // Install Service Worker
@@ -60,8 +59,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     const options = {
         body: 'Alvin made you something special!',
-        icon: '/images/icon-192x192.png',
-        badge: '/images/icon-192x192.png',
+        icon: '/images/gift.png',
+        badge: '/images/gift.png',
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
@@ -71,7 +70,7 @@ self.addEventListener('push', (event) => {
             {
                 action: 'explore',
                 title: 'Open Gift',
-                icon: '/images/icon-192x192.png'
+                icon: '/images/gift.png'
             }
         ]
     };
