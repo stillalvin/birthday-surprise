@@ -19,6 +19,8 @@ const wishesForm = document.getElementById('wishes-form');
 const installPrompt = document.getElementById('install-prompt');
 const installButton = document.getElementById('install-button');
 const closeInstallPrompt = document.getElementById('close-install-prompt');
+const installSuccess = document.getElementById('install-success');
+const closeSuccess = document.getElementById('close-success');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -212,6 +214,32 @@ function initializePWA() {
         installPrompt.classList.remove('active');
         installPrompt.classList.add('hidden');
         deferredPrompt = null;
+    });
+
+    // Handle install success
+    let deferredPrompt;
+    const installSuccess = document.getElementById('install-success');
+    const closeSuccess = document.getElementById('close-success');
+
+    // Listen for the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+    });
+
+    // Listen for the appinstalled event
+    window.addEventListener('appinstalled', (evt) => {
+        // Show the success message
+        installSuccess.style.display = 'flex';
+        // Clear the deferredPrompt
+        deferredPrompt = null;
+    });
+
+    // Close success message
+    closeSuccess.addEventListener('click', () => {
+        installSuccess.style.display = 'none';
     });
 }
 

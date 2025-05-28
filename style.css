@@ -449,4 +449,64 @@ section {
 
 #close-safari-prompt:hover {
     opacity: 1;
+}
+
+/* Install Success Message */
+#install-success {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.success-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.success-content i {
+    font-size: 3rem;
+    color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+.success-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.success-content p {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+#close-success {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+#close-success:hover {
+    opacity: 1;
 } 
