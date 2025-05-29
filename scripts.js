@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeForm();
     initializeCandle();
     checkDate();
+    initializeNotifications();
 });
 
 // Countdown Timer
@@ -239,7 +240,7 @@ function initializePWA() {
 }
 
 // Notifications
-function showNotification() {
+function initializeNotifications() {
     if ('Notification' in window) {
         // Request permission if not already granted
         if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
@@ -266,7 +267,8 @@ function showNotification() {
             document.getElementById('enable-notifications').addEventListener('click', () => {
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {
-                        sendBirthdayNotification();
+                        // Store the permission in localStorage
+                        localStorage.setItem('notificationsEnabled', 'true');
                     }
                     notificationPrompt.remove();
                 });
@@ -276,26 +278,43 @@ function showNotification() {
             document.getElementById('skip-notifications').addEventListener('click', () => {
                 notificationPrompt.remove();
             });
-        } else if (Notification.permission === 'granted') {
-            sendBirthdayNotification();
         }
     }
 }
 
-function sendBirthdayNotification() {
-    const notification = new Notification('🎉 Happy Birthday!', {
-        body: 'Alvin made you something special!',
-        icon: '/birthday-surprise/images/gift.png',
-        badge: '/birthday-surprise/images/gift.png',
-        vibrate: [200, 100, 200],
-        requireInteraction: true
-    });
+function showNotification() {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        // Check if we're on a mobile device
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+            // For mobile devices, use a more compatible notification approach
+            const notification = new Notification('🎉 Happy Birthday!', {
+                body: 'Alvin made you something special!',
+                icon: '/birthday-surprise/images/gift.png',
+                badge: '/birthday-surprise/images/gift.png',
+                vibrate: [200, 100, 200],
+                requireInteraction: true,
+                tag: 'birthday-notification' // Add a tag to prevent duplicate notifications
+            });
+        } else {
+            // For desktop devices
+            const notification = new Notification('🎉 Happy Birthday!', {
+                body: 'Alvin made you something special!',
+                icon: '/birthday-surprise/images/gift.png',
+                badge: '/birthday-surprise/images/gift.png',
+                vibrate: [200, 100, 200],
+                requireInteraction: true,
+                tag: 'birthday-notification'
+            });
+        }
 
-    // Handle notification click
-    notification.onclick = function() {
-        window.focus();
-        this.close();
-    };
+        // Handle notification click
+        notification.onclick = function() {
+            window.focus();
+            this.close();
+        };
+    }
 }
 
 // Date Check
