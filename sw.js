@@ -38,19 +38,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                // Return cached version or fetch new
-                return response || fetch(event.request)
-                    .then((response) => {
-                        // Cache new responses
-                        if (response.status === 200) {
-                            const responseClone = response.clone();
-                            caches.open(CACHE_NAME)
-                                .then((cache) => {
-                                    cache.put(event.request, responseClone);
-                                });
-                        }
-                        return response;
-                    });
+                if (response) {
+                    return response;
+                }
+                return fetch(event.request);
             })
     );
 });
@@ -84,9 +75,20 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 
-    if (event.action === 'explore') {
+    if (event.action === 'open') {
         event.waitUntil(
-            clients.openWindow('/')
+            clients.matchAll({ type: 'window' }).then((clientList) => {
+                // If a window is already open, focus it
+                for (const client of clientList) {
+                    if (client.url === '/' && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                // Otherwise, open a new window
+                if (clients.openWindow) {
+                    return clients.openWindow('/birthday-surprise/');
+                }
+            })
         );
     }
 }); 

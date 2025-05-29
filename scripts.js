@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-29T13:00:00');
+const BIRTHDAY_DATE = new Date('2025-05-29T16:00:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -264,14 +264,23 @@ function initializeNotifications() {
             document.body.appendChild(notificationPrompt);
 
             // Handle enable button click
-            document.getElementById('enable-notifications').addEventListener('click', () => {
-                Notification.requestPermission().then(permission => {
+            document.getElementById('enable-notifications').addEventListener('click', async () => {
+                try {
+                    const permission = await Notification.requestPermission();
                     if (permission === 'granted') {
-                        // Store the permission in localStorage
-                        localStorage.setItem('notificationsEnabled', 'true');
+                        // Register service worker for push notifications
+                        if ('serviceWorker' in navigator) {
+                            const registration = await navigator.serviceWorker.register('/birthday-surprise/sw.js');
+                            console.log('Service Worker registered:', registration);
+                            
+                            // Store the permission in localStorage
+                            localStorage.setItem('notificationsEnabled', 'true');
+                        }
                     }
-                    notificationPrompt.remove();
-                });
+                } catch (error) {
+                    console.error('Error enabling notifications:', error);
+                }
+                notificationPrompt.remove();
             });
 
             // Handle skip button click
@@ -287,15 +296,23 @@ function showNotification() {
         // Check if we're on a mobile device
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
-        if (isMobile) {
-            // For mobile devices, use a more compatible notification approach
-            const notification = new Notification('🎉 Happy Birthday!', {
-                body: 'Alvin made you something special!',
-                icon: '/birthday-surprise/images/gift.png',
-                badge: '/birthday-surprise/images/gift.png',
-                vibrate: [200, 100, 200],
-                requireInteraction: true,
-                tag: 'birthday-notification'
+        if (isMobile && 'serviceWorker' in navigator) {
+            // For mobile devices, use service worker to show notification
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification('🎉 Happy Birthday!', {
+                    body: 'Alvin made you something special!',
+                    icon: '/birthday-surprise/images/gift.png',
+                    badge: '/birthday-surprise/images/gift.png',
+                    vibrate: [200, 100, 200],
+                    requireInteraction: true,
+                    tag: 'birthday-notification',
+                    actions: [
+                        {
+                            action: 'open',
+                            title: 'Open Gift'
+                        }
+                    ]
+                });
             });
         } else {
             // For desktop devices
@@ -307,15 +324,13 @@ function showNotification() {
                 requireInteraction: true,
                 tag: 'birthday-notification'
             });
-        }
 
-        // Handle notification click
-        notification.onclick = function() {
-            // Focus the current window instead of redirecting
-            window.focus();
-            // Close the notification
-            this.close();
-        };
+            // Handle notification click
+            notification.onclick = function() {
+                window.focus();
+                this.close();
+            };
+        }
     }
 }
 
