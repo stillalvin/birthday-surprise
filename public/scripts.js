@@ -154,7 +154,7 @@ function initializeForm() {
 // PWA Features
 function initializePWA() {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/birthday-surprise/sw.js')
+        navigator.serviceWorker.register('/sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
                 // Subscribe to push notifications
@@ -292,7 +292,7 @@ function initializeNotifications() {
                     if (permission === 'granted') {
                         // Register service worker for push notifications
                         if ('serviceWorker' in navigator) {
-                            const registration = await navigator.serviceWorker.register('/birthday-surprise/sw.js');
+                            const registration = await navigator.serviceWorker.register('/sw.js');
                             console.log('Service Worker registered:', registration);
                             
                             // Store the permission in localStorage
@@ -323,8 +323,8 @@ function showNotification() {
             navigator.serviceWorker.ready.then(registration => {
                 registration.showNotification('🎉 Happy Birthday Jenny!', {
                     body: 'I(Alvin) made you something special!',
-                    icon: '/birthday-surprise/images/gift.png',
-                    badge: '/birthday-surprise/images/gift.png',
+                    icon: '/images/gift.png',
+                    badge: '/images/gift.png',
                     vibrate: [200, 100, 200],
                     requireInteraction: true,
                     tag: 'birthday-notification',
@@ -340,8 +340,8 @@ function showNotification() {
             // For desktop devices
             const notification = new Notification('🎉 Happy Birthday Jenny!', {
                 body: 'I(Alvin) made you something special!',
-                icon: '/birthday-surprise/images/gift.png',
-                badge: '/birthday-surprise/images/gift.png',
+                icon: '/images/gift.png',
+                badge: '/images/gift.png',
                 vibrate: [200, 100, 200],
                 requireInteraction: true,
                 tag: 'birthday-notification'

@@ -1,11 +1,11 @@
 const CACHE_NAME = 'birthday-gift-v1';
 const ASSETS_TO_CACHE = [
-    '/birthday-surprise/',
-    '/birthday-surprise/index.html',
-    '/birthday-surprise/style.css',
-    '/birthday-surprise/scripts.js',
-    '/birthday-surprise/manifest.json',
-    '/birthday-surprise/images/gift.png'
+    '/',
+    '/index.html',
+    '/style.css',
+    '/scripts.js',
+    '/manifest.json',
+    '/images/gift.png'
 ];
 
 // Install Service Worker
@@ -62,7 +62,7 @@ self.addEventListener('fetch', (event) => {
                     .catch(error => {
                         console.error('Fetch failed:', error);
                         // Return a fallback response or the cached version
-                        return caches.match('/birthday-surprise/offline.html')
+                        return caches.match('/offline.html')
                             .then(response => response || new Response('Offline content not available'));
                     });
             })
@@ -73,8 +73,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
     const options = {
         body: 'I(Alvin) made you something special!',
-        icon: '/birthday-surprise/images/gift.png',
-        badge: '/birthday-surprise/images/gift.png',
+        icon: '/images/gift.png',
+        badge: '/images/gift.png',
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
@@ -84,7 +84,7 @@ self.addEventListener('push', (event) => {
             {
                 action: 'explore',
                 title: 'Open Gift',
-                icon: '/birthday-surprise/images/gift.png'
+                icon: '/images/gift.png'
             }
         ]
     };
@@ -109,7 +109,7 @@ self.addEventListener('notificationclick', (event) => {
                 }
                 // Otherwise, open a new window
                 if (clients.openWindow) {
-                    return clients.openWindow('/birthday-surprise/');
+                    return clients.openWindow('/');
                 }
             })
         );
