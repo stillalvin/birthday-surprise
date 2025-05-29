@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-29T23:00:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T00:00:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -157,7 +157,17 @@ function initializePWA() {
         navigator.serviceWorker.register('/sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
-                // Subscribe to push notifications
+                // Request notification permission first
+                return Notification.requestPermission();
+            })
+            .then(permission => {
+                if (permission === 'granted') {
+                    // Subscribe to push notifications
+                    return navigator.serviceWorker.ready;
+                }
+                throw new Error('Notification permission denied');
+            })
+            .then(registration => {
                 return registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: 'BAxkYCGx9HJzvdMgvuA22kaAnbv1RKVCJShjLF5HyIH_c_UxMZJ5xHlrJwZRMA7gaXufxp1nAkBnobj4tu2jW9U'
@@ -179,6 +189,8 @@ function initializePWA() {
                     throw new Error('Failed to send subscription to server');
                 }
                 console.log('Subscription sent to server successfully');
+                // Store subscription in localStorage
+                localStorage.setItem('pushSubscription', 'true');
             })
             .catch(err => {
                 console.log('ServiceWorker registration or push subscription failed: ', err);

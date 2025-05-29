@@ -10,9 +10,11 @@ const ASSETS_TO_CACHE = [
 
 // Install Service Worker
 self.addEventListener('install', (event) => {
+    console.log('Service Worker installing...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
+                console.log('Caching app assets');
                 return cache.addAll(ASSETS_TO_CACHE);
             })
     );
@@ -20,11 +22,13 @@ self.addEventListener('install', (event) => {
 
 // Activate Service Worker
 self.addEventListener('activate', (event) => {
+    console.log('Service Worker activating...');
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
                 cacheNames.map((cacheName) => {
                     if (cacheName !== CACHE_NAME) {
+                        console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
                 })
@@ -69,11 +73,23 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Push Notification
+// Push Event
 self.addEventListener('push', (event) => {
+    console.log('Push event received');
+    let payload;
+    try {
+        payload = event.data.json();
+    } catch (e) {
+        payload = {
+            title: '🎉 Happy Birthday Jenny!',
+            body: 'I made you something special!',
+            icon: '/images/gift.png'
+        };
+    }
+
     const options = {
-        body: 'I made you something special!',
-        icon: '/images/gift.png',
+        body: payload.body || 'I made you something special!',
+        icon: payload.icon || '/images/gift.png',
         badge: '/images/gift.png',
         vibrate: [100, 50, 100],
         data: {
@@ -82,7 +98,7 @@ self.addEventListener('push', (event) => {
         },
         actions: [
             {
-                action: 'explore',
+                action: 'open',
                 title: 'Open Gift',
                 icon: '/images/gift.png'
             }
@@ -90,12 +106,13 @@ self.addEventListener('push', (event) => {
     };
 
     event.waitUntil(
-        self.registration.showNotification('🎉 Happy Birthday Jenny!', options)
+        self.registration.showNotification(payload.title || '🎉 Happy Birthday Jenny!', options)
     );
 });
 
 // Notification Click
 self.addEventListener('notificationclick', (event) => {
+    console.log('Notification clicked');
     event.notification.close();
 
     if (event.action === 'open') {
