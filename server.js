@@ -1,15 +1,16 @@
 const express = require('express');
 const webpush = require('web-push');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
 // Your VAPID keys
 const publicVapidKey = 'BAxkYCGx9HJzvdMgvuA22kaAnbv1RKVCJShjLF5HyIH_c_UxMZJ5xHlrJwZRMA7gaXufxp1nAkBnobj4tu2jW9U';
-const privateVapidKey = 'Q3fADfoBxTb-zZ0zSA2Nq1aaUieEmzinXnMA-UZvNAc'; // Replace with your private key
+const privateVapidKey = 'Q3fADfoBxTb-zZ0zSA2Nq1aaUieEmzinXnMA-UZvNAc';
 
 // Set VAPID keys
 webpush.setVapidDetails(
-    'mailto:amfree8050@gmail.com', // Replace with your email
+    'mailto:amfree8050@gmail.com',
     publicVapidKey,
     privateVapidKey
 );
@@ -17,6 +18,7 @@ webpush.setVapidDetails(
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Store subscriptions (in a real app, you'd use a database)
 let subscriptions = [];
@@ -47,6 +49,11 @@ app.post('/send-notification', async (req, res) => {
         console.error('Error sending notifications:', error);
         res.status(500).json({ error: 'Failed to send notifications' });
     }
+});
+
+// Serve the main page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
