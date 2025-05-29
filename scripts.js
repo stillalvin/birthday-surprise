@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-29T12:20:00');
+const BIRTHDAY_DATE = new Date('2025-05-29T12:30:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -295,7 +295,7 @@ function showNotification() {
                 badge: '/birthday-surprise/images/gift.png',
                 vibrate: [200, 100, 200],
                 requireInteraction: true,
-                tag: 'birthday-notification' // Add a tag to prevent duplicate notifications
+                tag: 'birthday-notification'
             });
         } else {
             // For desktop devices
@@ -311,7 +311,9 @@ function showNotification() {
 
         // Handle notification click
         notification.onclick = function() {
+            // Focus the current window instead of redirecting
             window.focus();
+            // Close the notification
             this.close();
         };
     }
