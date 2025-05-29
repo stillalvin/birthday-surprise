@@ -157,9 +157,31 @@ function initializePWA() {
         navigator.serviceWorker.register('/birthday-surprise/sw.js')
             .then(registration => {
                 console.log('ServiceWorker registration successful');
+                // Subscribe to push notifications
+                return registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: 'BAxkYCGx9HJzvdMgvuA22kaAnbv1RKVCJShjLF5HyIH_c_UxMZJ5xHlrJwZRMA7gaXufxp1nAkBnobj4tu2jW9U'
+                });
+            })
+            .then(subscription => {
+                console.log('Push notification subscription successful:', subscription);
+                // Send subscription to server
+                return fetch('/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(subscription)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send subscription to server');
+                }
+                console.log('Subscription sent to server successfully');
             })
             .catch(err => {
-                console.log('ServiceWorker registration failed: ', err);
+                console.log('ServiceWorker registration or push subscription failed: ', err);
             });
     }
 
@@ -299,8 +321,8 @@ function showNotification() {
         if (isMobile && 'serviceWorker' in navigator) {
             // For mobile devices, use service worker to show notification
             navigator.serviceWorker.ready.then(registration => {
-                registration.showNotification('🎉 Happy Birthday!', {
-                    body: 'Alvin made you something special!',
+                registration.showNotification('🎉 Happy Birthday Jenny!', {
+                    body: 'I(Alvin) made you something special!',
                     icon: '/birthday-surprise/images/gift.png',
                     badge: '/birthday-surprise/images/gift.png',
                     vibrate: [200, 100, 200],
@@ -316,8 +338,8 @@ function showNotification() {
             });
         } else {
             // For desktop devices
-            const notification = new Notification('🎉 Happy Birthday!', {
-                body: 'Alvin made you something special!',
+            const notification = new Notification('🎉 Happy Birthday Jenny!', {
+                body: 'I(Alvin) made you something special!',
                 icon: '/birthday-surprise/images/gift.png',
                 badge: '/birthday-surprise/images/gift.png',
                 vibrate: [200, 100, 200],

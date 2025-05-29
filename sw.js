@@ -72,7 +72,7 @@ self.addEventListener('fetch', (event) => {
 // Push Notification
 self.addEventListener('push', (event) => {
     const options = {
-        body: 'Alvin made you something special!',
+        body: 'I(Alvin) made you something special!',
         icon: '/birthday-surprise/images/gift.png',
         badge: '/birthday-surprise/images/gift.png',
         vibrate: [100, 50, 100],
@@ -90,7 +90,7 @@ self.addEventListener('push', (event) => {
     };
 
     event.waitUntil(
-        self.registration.showNotification('🎉 Happy Birthday!', options)
+        self.registration.showNotification('🎉 Happy Birthday Jenny!', options)
     );
 });
 
