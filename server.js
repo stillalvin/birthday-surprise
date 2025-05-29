@@ -34,8 +34,8 @@ app.post('/subscribe', (req, res) => {
 app.post('/send-notification', async (req, res) => {
     const payload = JSON.stringify({
         title: '🎉 Happy Birthday Jenny!',
-        body: 'I(Alvin) made you something special!',
-        icon: '/birthday-surprise/images/gift.png'
+        body: 'I made you something special!',
+        icon: '/images/gift.png'
     });
 
     try {
@@ -55,6 +55,41 @@ app.post('/send-notification', async (req, res) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Scheduled notification check
+const BIRTHDAY_DATE = new Date('2025-05-29T22:22:00');
+
+function checkAndSendNotifications() {
+    const now = new Date();
+    const timeUntilBirthday = BIRTHDAY_DATE - now;
+    
+    // If it's birthday time (within 1 minute of the target time)
+    if (timeUntilBirthday > 0 && timeUntilBirthday <= 60000) {
+        const payload = JSON.stringify({
+            title: '🎉 Happy Birthday Jenny!',
+            body: 'I made you something special!',
+            icon: '/images/gift.png'
+        });
+
+        // Send to all subscriptions
+        subscriptions.forEach(subscription => {
+            webpush.sendNotification(subscription, payload)
+                .catch(error => {
+                    console.error('Error sending notification:', error);
+                    // Remove invalid subscriptions
+                    if (error.statusCode === 410) {
+                        subscriptions = subscriptions.filter(sub => sub !== subscription);
+                    }
+                });
+        });
+    }
+}
+
+// Check every minute
+setInterval(checkAndSendNotifications, 60000);
+
+// Also check immediately when server starts
+checkAndSendNotifications();
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

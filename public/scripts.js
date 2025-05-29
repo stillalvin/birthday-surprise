@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-29T22:10:00');
+const BIRTHDAY_DATE = new Date('2025-05-29T22:22:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -322,7 +322,7 @@ function showNotification() {
             // For mobile devices, use service worker to show notification
             navigator.serviceWorker.ready.then(registration => {
                 registration.showNotification('🎉 Happy Birthday Jenny!', {
-                    body: 'I(Alvin) made you something special!',
+                    body: 'I made you something special!',
                     icon: '/images/gift.png',
                     badge: '/images/gift.png',
                     vibrate: [200, 100, 200],
@@ -339,7 +339,7 @@ function showNotification() {
         } else {
             // For desktop devices
             const notification = new Notification('🎉 Happy Birthday Jenny!', {
-                body: 'I(Alvin) made you something special!',
+                body: 'I made you something special!',
                 icon: '/images/gift.png',
                 badge: '/images/gift.png',
                 vibrate: [200, 100, 200],

@@ -72,7 +72,7 @@ self.addEventListener('fetch', (event) => {
 // Push Notification
 self.addEventListener('push', (event) => {
     const options = {
-        body: 'I(Alvin) made you something special!',
+        body: 'I made you something special!',
         icon: '/images/gift.png',
         badge: '/images/gift.png',
         vibrate: [100, 50, 100],
