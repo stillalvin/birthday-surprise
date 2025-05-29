@@ -19,7 +19,6 @@ const wishesForm = document.getElementById('wishes-form');
 const installPrompt = document.getElementById('install-prompt');
 const installButton = document.getElementById('install-button');
 const closeInstallPrompt = document.getElementById('close-install-prompt');
-const notificationBtn = document.getElementById('enable-notification-btn');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -187,24 +186,6 @@ function initializePWA() {
         return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
     };
 
-    // Show notification button if app is installed
-    if (isStandalone()) {
-        notificationBtn.classList.remove('hidden');
-        notificationBtn.addEventListener('click', async () => {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    notificationBtn.innerHTML = '<i class="fas fa-check"></i> Notifications Enabled';
-                    notificationBtn.disabled = true;
-                    notificationBtn.style.background = '#4CAF50';
-                    localStorage.setItem('notificationsEnabled', 'true');
-                }
-            } catch (error) {
-                console.error('Error enabling notifications:', error);
-            }
-        });
-    }
-
     // Show appropriate prompt based on browser
     if (isSafari() && isIOS() && !isStandalone()) {
         console.log('Safari on iOS detected and not installed');
@@ -240,11 +221,6 @@ function initializePWA() {
                 deferredPrompt = null;
                 installPrompt.classList.remove('active');
                 installPrompt.classList.add('hidden');
-                
-                // Show notification button after installation
-                if (outcome === 'accepted') {
-                    notificationBtn.classList.remove('hidden');
-                }
             }
         });
 
@@ -260,7 +236,6 @@ function initializePWA() {
         installPrompt.classList.remove('active');
         installPrompt.classList.add('hidden');
         deferredPrompt = null;
-        notificationBtn.classList.remove('hidden');
     });
 }
 
