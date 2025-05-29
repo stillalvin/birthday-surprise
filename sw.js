@@ -41,7 +41,30 @@ self.addEventListener('fetch', (event) => {
                 if (response) {
                     return response;
                 }
-                return fetch(event.request);
+                return fetch(event.request)
+                    .then(response => {
+                        // Check if we received a valid response
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
+
+                        // Clone the response
+                        const responseToCache = response.clone();
+
+                        // Cache the response
+                        caches.open(CACHE_NAME)
+                            .then(cache => {
+                                cache.put(event.request, responseToCache);
+                            });
+
+                        return response;
+                    })
+                    .catch(error => {
+                        console.error('Fetch failed:', error);
+                        // Return a fallback response or the cached version
+                        return caches.match('/birthday-surprise/offline.html')
+                            .then(response => response || new Response('Offline content not available'));
+                    });
             })
     );
 });

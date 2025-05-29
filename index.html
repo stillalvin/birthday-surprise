@@ -11,12 +11,12 @@
     <!-- PWA Support -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="images/gift.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Gift from Alvin">
     
     <!-- Safari PWA Support -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-startup-image" href="images/gift.png">
     
@@ -50,6 +50,9 @@
                     <span class="label">Seconds</span>
                 </div>
             </div>
+            <button id="enable-notification-btn" class="notification-btn hidden">
+                <i class="fas fa-bell"></i> Enable Notifications
+            </button>
         </div>
     </section>
 
