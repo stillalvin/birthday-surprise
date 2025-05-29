@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
 });
 
 // Scheduled notification check
-const BIRTHDAY_DATE = new Date('2025-05-29T22:50:00');
+const BIRTHDAY_DATE = new Date('2025-05-29T23:00:00');
 
 function checkAndSendNotifications() {
     const now = new Date();
