@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T22:25:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T22:30:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
