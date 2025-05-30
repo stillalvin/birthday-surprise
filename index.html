@@ -16,18 +16,19 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Gift from Alvin">
     
-    <!-- Safari PWA Support -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-startup-image" href="images/gift.png">
-    
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/scratchcard-js@2.0.0/dist/scratchcard.min.js"></script>
 </head>
 <body>
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts"></div>
+
     <!-- Countdown Section -->
     <section id="countdown-section" class="active">
         <div class="countdown-container">
@@ -68,18 +69,32 @@
             </div>
         </section>
 
-        <!-- Gallery Section -->
-        <section id="gallery-section">
-            <h2>Our Memories</h2>
-            <div class="gallery-container">
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x300" alt="Test Image 1">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x300" alt="Test Image 2">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://via.placeholder.com/300x300" alt="Test Image 3">
+        <!-- Scratch Card Section -->
+        <section id="scratch-section">
+            <div class="scratch-container">
+                <h2>🎁 Scratch to Reveal Your Surprise!</h2>
+                <div id="scratch-card" class="scratch-card"></div>
+            </div>
+        </section>
+
+        <!-- Audio Message Section -->
+        <section id="audio-section">
+            <div class="audio-container">
+                <h2>🎧 A Special Message from Me</h2>
+                <div class="audio-player">
+                    <audio id="audio-message" src="audio/my_message.mp3"></audio>
+                    <div class="audio-controls">
+                        <button id="play-audio" class="audio-button">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <div class="audio-wave">
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -88,6 +103,9 @@
         <section id="wishes-section">
             <h2>Make Your Wishes</h2>
             <div class="form-container">
+                <div class="candle-animation">
+                    <div class="flame"></div>
+                </div>
                 <form id="wishes-form" action="https://formspree.io/f/xpwdvjor" method="POST">
                     <div class="form-group">
                         <label for="wish-for-self">A wish for yourself ❤️</label>
@@ -97,23 +115,10 @@
                         <label for="wish-for-friendship">A wish for our friendship 🤗</label>
                         <textarea id="wish-for-friendship" name="wish-for-friendship" required></textarea>
                     </div>
-                    <button type="submit" class="submit-button">
-                        <i class="fas fa-paper-plane"></i> Send Wishes
+                    <button type="submit" class="submit-button pulse">
+                        <i class="fas fa-birthday-cake"></i> Blow the Candle
                     </button>
                 </form>
-            </div>
-        </section>
-
-        <!-- Candle Section -->
-        <section id="candle-section">
-            <div class="candle-container">
-                <button id="blow-candle" class="candle-button">
-                    <i class="fas fa-birthday-cake"></i>
-                    Blow the Candle
-                </button>
-                <div class="candle-animation">
-                    <div class="flame"></div>
-                </div>
             </div>
         </section>
     </section>
@@ -126,16 +131,6 @@
         </div>
     </section>
 
-    <!-- Audio Player -->
-    <div id="audio-player" class="hidden">
-        <audio id="birthday-song" loop>
-            <source src="" type="audio/mpeg">
-        </audio>
-        <button id="toggle-music">
-            <i class="fas fa-music"></i>
-        </button>
-    </div>
-
     <!-- Add to Home Screen Button -->
     <div id="install-prompt" class="hidden">
         <div class="install-prompt-content">
@@ -145,23 +140,6 @@
             </button>
             <button id="close-install-prompt">
                 <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Safari Install Instructions -->
-    <div id="safari-install-prompt" class="hidden">
-        <div class="safari-install-content">
-            <h3><i class="fas fa-mobile-alt"></i> Add to Home Screen</h3>
-            <p>To install this special gift on your iPhone:</p>
-            <ol>
-                <li>Tap the Share button <i class="fas fa-share-square"></i> at the bottom of your screen</li>
-                <li>Scroll down and tap "Add to Home Screen" <i class="fas fa-plus-square"></i></li>
-                <li>Tap "Add" in the top right corner</li>
-            </ol>
-            <p class="safari-note">This will make the gift work like an app on your phone!</p>
-            <button id="close-safari-prompt" class="safari-close-button">
-                <i class="fas fa-times"></i> Close
             </button>
         </div>
     </div>
