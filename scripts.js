@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T13:00:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T22:10:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
@@ -241,30 +241,62 @@ function initializeForm() {
     });
 }
 
-// Initialize PWA
-function initializePWA() {
-    let deferredPrompt;
+// PWA Installation
+let deferredPrompt;
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installPrompt.classList.remove('hidden');
-    });
+// Check if the app is already installed
+function isPWAInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true;
+}
 
-    installButton.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                console.log('User accepted the install prompt');
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Only show the install prompt if the app is not already installed
+    if (!isPWAInstalled()) {
+        setTimeout(() => {
+            if (deferredPrompt) {
+                installPrompt.classList.remove('hidden');
             }
-            deferredPrompt = null;
+        }, 3000);
+    }
+});
+
+// Also check on page load
+window.addEventListener('load', () => {
+    if (isPWAInstalled()) {
+        installPrompt.classList.add('hidden');
+    }
+});
+
+installButton.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
             installPrompt.classList.add('hidden');
         }
-    });
+        deferredPrompt = null;
+    }
+});
 
-    closeInstallPrompt.addEventListener('click', () => {
-        installPrompt.classList.add('hidden');
+closeInstallPrompt.addEventListener('click', () => {
+    installPrompt.classList.add('hidden');
+});
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/birthday-surprise/sw.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
     });
 }
 

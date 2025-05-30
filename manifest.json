@@ -2,20 +2,22 @@
     "name": "Birthday Gift from Alvin",
     "short_name": "Birthday Gift",
     "description": "A special birthday gift for my best friend",
-    "start_url": "/",
+    "start_url": "/birthday-surprise/",
     "display": "standalone",
-    "background_color": "#fff5f7",
+    "background_color": "#ffffff",
     "theme_color": "#ff69b4",
     "icons": [
         {
             "src": "images/gift.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
             "src": "images/gift.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 } 
