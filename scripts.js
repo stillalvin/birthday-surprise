@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T22:55:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T23:05:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
@@ -18,6 +18,7 @@ const wishesForm = document.getElementById('wishes-form');
 const installPrompt = document.getElementById('install-prompt');
 const installButton = document.getElementById('install-button');
 const closeInstallPrompt = document.getElementById('close-install-prompt');
+const safariMessage = document.getElementById('safari-message');
 
 // Initialize floating hearts
 function initializeFloatingHearts() {
@@ -244,6 +245,17 @@ function initializeForm() {
 // PWA Installation
 let deferredPrompt;
 
+// Check if the browser is Safari
+function isSafari() {
+    return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
+// Check if the app is already installed
+function isPWAInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches || 
+           window.navigator.standalone === true;
+}
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -264,6 +276,15 @@ installButton.addEventListener('click', async () => {
 
 closeInstallPrompt.addEventListener('click', () => {
     installPrompt.classList.add('hidden');
+});
+
+// Handle Safari message
+window.addEventListener('load', () => {
+    if (isSafari() && !isPWAInstalled()) {
+        setTimeout(() => {
+            safariMessage.classList.add('visible');
+        }, 3000);
+    }
 });
 
 // Register Service Worker

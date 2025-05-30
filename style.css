@@ -605,4 +605,33 @@ section {
     font-size: 1.2rem;
     text-align: center;
     z-index: 1;
+}
+
+/* Safari Message */
+.safari-message {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    z-index: 1000;
+    display: none;
+}
+
+.safari-message.visible {
+    display: block;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 } 
