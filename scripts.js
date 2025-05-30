@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T22:25:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T22:40:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
@@ -250,14 +250,44 @@ function isPWAInstalled() {
            window.navigator.standalone === true;
 }
 
+// Check if the browser is Safari
+function isSafari() {
+    return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
+// Show install prompt based on browser
+function showInstallPrompt() {
+    if (isSafari()) {
+        // For Safari, show custom instructions
+        installPrompt.classList.remove('hidden');
+        installButton.innerHTML = '<i class="fas fa-share"></i> Add to Home Screen';
+        installButton.addEventListener('click', () => {
+            alert('To add to home screen:\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"');
+            installPrompt.classList.add('hidden');
+        });
+    } else {
+        // For other browsers, use the standard PWA prompt
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                installPrompt.classList.add('hidden');
+            });
+        }
+    }
+}
+
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
     // Show the install prompt after a delay
     setTimeout(() => {
-        if (deferredPrompt && !isPWAInstalled()) {
-            installPrompt.classList.remove('hidden');
+        if (!isPWAInstalled()) {
+            showInstallPrompt();
         }
     }, 3000);
 });
@@ -266,18 +296,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
 window.addEventListener('load', () => {
     if (isPWAInstalled()) {
         installPrompt.classList.add('hidden');
-    }
-});
-
-installButton.addEventListener('click', async () => {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            console.log('User accepted the install prompt');
-            installPrompt.classList.add('hidden');
-        }
-        deferredPrompt = null;
+    } else if (isSafari()) {
+        // For Safari, show the prompt on load if not installed
+        setTimeout(() => {
+            showInstallPrompt();
+        }, 3000);
     }
 });
 
