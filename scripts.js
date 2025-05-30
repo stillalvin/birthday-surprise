@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T23:05:00');
+const BIRTHDAY_DATE = new Date('2025-05-31T10:10:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
@@ -129,6 +129,7 @@ function initializeCountdown() {
 function showMainContent() {
     countdownSection.classList.remove('active');
     countdownSection.classList.add('hidden');
+    safariMessage.classList.remove('visible');
     
     setTimeout(() => {
         mainContent.classList.remove('hidden');
@@ -282,7 +283,9 @@ closeInstallPrompt.addEventListener('click', () => {
 window.addEventListener('load', () => {
     if (isSafari() && !isPWAInstalled()) {
         setTimeout(() => {
-            safariMessage.classList.add('visible');
+            if (countdownSection.classList.contains('active')) {
+                safariMessage.classList.add('visible');
+            }
         }, 3000);
     }
 });
