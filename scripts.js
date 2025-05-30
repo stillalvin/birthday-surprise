@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-30T22:10:00');
+const BIRTHDAY_DATE = new Date('2025-05-30T22:25:00');
 
 // DOM Elements
 const countdownSection = document.getElementById('countdown-section');
@@ -254,14 +254,12 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
-    // Only show the install prompt if the app is not already installed
-    if (!isPWAInstalled()) {
-        setTimeout(() => {
-            if (deferredPrompt) {
-                installPrompt.classList.remove('hidden');
-            }
-        }, 3000);
-    }
+    // Show the install prompt after a delay
+    setTimeout(() => {
+        if (deferredPrompt && !isPWAInstalled()) {
+            installPrompt.classList.remove('hidden');
+        }
+    }, 3000);
 });
 
 // Also check on page load
@@ -305,6 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeCountdown();
     initializeAudio();
     initializeForm();
-    initializePWA();
     initializeScratchCard();
+    
+    // Initialize floating hearts immediately if we're in standalone mode
+    if (isPWAInstalled()) {
+        initializeFloatingHearts();
+    }
 }); 

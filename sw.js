@@ -8,13 +8,20 @@ const urlsToCache = [
     '/birthday-surprise/images/gift.png',
     '/birthday-surprise/images/surprise.jpg',
     '/birthday-surprise/images/scratch-bg.jpg',
-    '/birthday-surprise/audio/my_message.mp3'
+    '/birthday-surprise/audio/my_message.mp3',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+    'https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js',
+    'https://cdn.jsdelivr.net/npm/scratchcard-js@2.0.0/dist/scratchcard.min.js'
 ];
 
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(urlsToCache))
+            .then(cache => {
+                console.log('Opened cache');
+                return cache.addAll(urlsToCache);
+            })
     );
 });
 
