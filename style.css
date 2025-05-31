@@ -46,7 +46,7 @@ body {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.countdown-timer {
+.countdown {
     display: flex;
     gap: 1.5rem;
     margin-top: 2rem;
@@ -380,7 +380,7 @@ section {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .countdown-timer {
+    .countdown {
         flex-wrap: wrap;
     }
     
@@ -954,18 +954,47 @@ section {
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 1rem;
+    padding: 0.8rem;
     text-align: center;
-    background: transparent;
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     z-index: 1000;
+    border-top: 1px solid rgba(255, 105, 180, 0.2);
 }
 
 .site-footer p {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-color);
-    opacity: 0.8;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+/* Mobile Footer Adjustments */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 0.6rem;
+        background: transparent;
+    }
+
+    .site-footer p {
+        font-size: 0.8rem;
+    }
+
+    /* Adjust main content padding for mobile */
+    #main-content {
+        padding-bottom: 3rem;
+    }
+
+    /* Ensure footer doesn't overlap with other elements on mobile */
+    #countdown-section,
+    #main-content,
+    #expired-section {
+        padding-bottom: 3.5rem;
+    }
 }
 
 /* Adjust main content padding to account for footer */

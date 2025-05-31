@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-31T23:20:00');
+const BIRTHDAY_DATE = new Date('2025-06-09T00:00:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
