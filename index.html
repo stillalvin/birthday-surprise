@@ -16,18 +16,20 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Gift from Alvin">
     
+    <!-- Safari PWA Support -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image" href="images/gift.png">
+    
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
     
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/scratchcard-js@2.0.0/dist/scratchcard.min.js"></script>
 </head>
 <body>
-    <!-- Floating Hearts Background -->
-    <div class="floating-hearts"></div>
+    <!-- Floating Hearts Container -->
+    <div id="floating-hearts"></div>
 
     <!-- Countdown Section -->
     <section id="countdown-section" class="active">
@@ -59,42 +61,36 @@
         <!-- Letter Section -->
         <section id="letter-section">
             <div class="letter-container">
-                <h2>My Dearest Friend,</h2>
+                <h2>Hey birthday girl, 😋</h2>
                 <div id="letter-content">
-                    <p>Dear Best Friend,</p>
-                    <p>This is a test letter to see how the content looks. The real letter will be added later.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <p>With love,<br>Alvin</p>
+                    <p>Look at you, turning a year older today! Happy Birthday, my love! 💖🎉</p>
+                    <p>Can you believe I've been working on this gift since May 28th and finished it on the 31th of may? Yeah, I know, impressive, right? Don't even act surprised 😎. Between messing things up, fixing them, and learning things I didn't even plan to, this little project honestly took me on a whole journey. But hey for you, it's worth it. (You better not make me regret saying that. 😏)</p>
+                    <p>I know we haven't even been best friends for a full year yet, but honestly? You've already made such a big space in my life. You're the person I find myself thinking about laughing at random memories, wanting to tell you things, and feeling grateful you're here.</p>
+                    <p>Even with the distance between us, you're always somehow close to me. And yeah, it's annoying sometimes because I can't just randomly show up, poke you, or steal your snacks in person 😤. But it also makes moments like these putting effort into surprises, little messages, and gifts feel extra special.</p>
+                    <p>Today is your day. You better soak up all the love, attention, and cake 🍰 (I'll pretend I'm not watching you from afar, waiting for you to save me a slice). You are funny, soft, chaotic (yes, chaotic), and honestly so important to me probably more than you even realize.</p>
+                    <p>Happy Birthday, my love. 🎂💛</p>
+                    <p>Sending you the biggest hugs from across the distance, the annoying pokes you can't dodge, and a soft little promise: I'm so glad you're in my life, and I'm not going anywhere. 🌍💕</p><br>
+                    <p>P.S. Don't think this is the end this is only the beginning of me teasing you for the rest of the year. 😘 <strong>You're stuck with me now.</strong></p>
                 </div>
             </div>
         </section>
 
-        <!-- Scratch Card Section -->
-        <section id="scratch-section">
-            <div class="scratch-container">
-                <h2>🎁 Scratch to Reveal Your Surprise!</h2>
-                <div id="scratch-card" class="scratch-card"></div>
-            </div>
-        </section>
-
         <!-- Audio Message Section -->
-        <section id="audio-section">
+        <section id="audio-message-section">
+            <h2>JUST ME YAPPING😚</h2>
             <div class="audio-container">
-                <h2>🎧 A Special Message from Me</h2>
-                <div class="audio-player">
-                    <audio id="audio-message" src="audio/my_message.mp3"></audio>
-                    <div class="audio-controls">
-                        <button id="play-audio" class="audio-button">
-                            <i class="fas fa-play"></i>
-                        </button>
-                        <div class="audio-wave">
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                            <div class="wave-bar"></div>
-                        </div>
-                    </div>
+                <audio id="special-message">
+                    <source src="audio/my_message.mp3" type="audio/mpeg">
+                </audio>
+                <button id="play-audio" class="play-button">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="equalizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
                 </div>
             </div>
         </section>
@@ -115,7 +111,7 @@
                         <label for="wish-for-friendship">A wish for our friendship 🤗</label>
                         <textarea id="wish-for-friendship" name="wish-for-friendship" required></textarea>
                     </div>
-                    <button type="submit" class="submit-button pulse">
+                    <button type="submit" class="submit-button" id="blow-candle-btn">
                         <i class="fas fa-birthday-cake"></i> Blow the Candle
                     </button>
                 </form>
@@ -135,18 +131,30 @@
     <div id="install-prompt" class="hidden">
         <div class="install-prompt-content">
             <p>Add this gift to your home screen for the best experience!</p>
-            <button id="install-button" class="install-button">
+            <button id="install-button">
                 <i class="fas fa-plus"></i> Add to Home Screen
             </button>
-            <button id="close-install-prompt" class="close-button">
+            <button id="close-install-prompt">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     </div>
 
-    <!-- Safari Message -->
-    <div id="safari-message" class="safari-message">
-        <p>💝 Tap the Share button and select "Add to Home Screen" to save this gift!</p>
+    <!-- Safari Install Instructions -->
+    <div id="safari-install-prompt" class="hidden">
+        <div class="safari-install-content">
+            <h3><i class="fas fa-mobile-alt"></i> Add to Home Screen</h3>
+            <p>To install this special gift on your iPhone:</p>
+            <ol>
+                <li>Tap the Share button <i class="fas fa-share-square"></i> at the bottom of your screen</li>
+                <li>Scroll down and tap "Add to Home Screen" <i class="fas fa-plus-square"></i></li>
+                <li>Tap "Add" in the top right corner</li>
+            </ol>
+            <p class="safari-note">This will make the gift work like an app on your phone!</p>
+            <button id="close-safari-prompt" class="safari-close-button">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
     </div>
 
     <!-- Scripts -->
