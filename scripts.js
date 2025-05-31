@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-31T23:05:00');
+const BIRTHDAY_DATE = new Date('2025-05-31T23:13:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -67,7 +67,10 @@ function showMainContent() {
     mainContent.classList.add('active', 'fade-in');
     audioPlayer.classList.remove('hidden');
     showNotification();
+    
+    // Show install prompt immediately when main content is shown
     showInstallPrompt();
+    
     // Ensure floating hearts continue
     if (!window.floatingHeartsInterval) {
         initializeFloatingHearts();
@@ -202,11 +205,14 @@ function initializeCandle() {
 // Confetti Effect
 function triggerConfetti() {
     confetti({
-        particleCount: 50,
-        spread: 50,
+        particleCount: 30,
+        spread: 40,
         origin: { y: 0.6 },
         disableForReducedMotion: true,
-        ticks: 200
+        ticks: 150,
+        gravity: 1.2,
+        scalar: 0.8,
+        drift: 0
     });
 }
 
@@ -303,6 +309,7 @@ function initializeAudioMessage() {
 
 // Form Handling
 function initializeForm() {
+    const wishesForm = document.getElementById('wishes-form');
     const submitButton = wishesForm.querySelector('.submit-button');
     
     // Check if form was already submitted
@@ -348,38 +355,28 @@ function initializeForm() {
                 wishesForm.innerHTML = '';
                 wishesForm.appendChild(successMessage);
                 
-                // Wait for success message to be visible
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Fade out success message
-                successMessage.classList.add('fade-out');
-                
-                // Wait for fade out animation
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                // Remove success message
-                successMessage.remove();
-                
-                // Blow out the candle
-                const flame = document.querySelector('.flame');
-                flame.classList.add('blown');
-                
-                // Wait for candle animation
-                await new Promise(resolve => setTimeout(resolve, 300));
-                
-                // Show birthday message
-                const birthdayMessage = document.createElement('div');
-                birthdayMessage.className = 'birthday-message';
-                birthdayMessage.innerHTML = `
-                    <h2>HAPPY BIRTHDAY!</h2>
-                    <p>May all your wishes come true! 🎂✨</p>
-                `;
-                wishesForm.appendChild(birthdayMessage);
-                
-                // Trigger confetti with a slight delay
-                setTimeout(() => {
-                    triggerConfetti();
-                }, 100);
+                // Use requestAnimationFrame for smoother animations
+                requestAnimationFrame(() => {
+                    // Blow out the candle first
+                    const flame = document.querySelector('.flame');
+                    flame.classList.add('blown');
+                    
+                    // Show birthday message after a short delay
+                    setTimeout(() => {
+                        const birthdayMessage = document.createElement('div');
+                        birthdayMessage.className = 'birthday-message';
+                        birthdayMessage.innerHTML = `
+                            <h2>HAPPY BIRTHDAY!</h2>
+                            <p>May all your wishes come true! 🎂✨</p>
+                        `;
+                        wishesForm.appendChild(birthdayMessage);
+                        
+                        // Trigger confetti after message is shown
+                        setTimeout(() => {
+                            triggerConfetti();
+                        }, 100);
+                    }, 300);
+                });
             } else {
                 throw new Error('Wishes submission failed');
             }
@@ -406,7 +403,11 @@ function initializePWA() {
     // Improved Safari detection
     const isSafari = () => {
         const ua = navigator.userAgent.toLowerCase();
-        return ua.includes('safari') && !ua.includes('chrome');
+        return (
+            (ua.includes('safari') && !ua.includes('chrome')) ||
+            (ua.includes('iphone') || ua.includes('ipad')) ||
+            (navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform))
+        );
     };
 
     const isIOS = () => {
@@ -433,14 +434,18 @@ function initializePWA() {
             const safariPrompt = document.getElementById('safari-install-prompt');
             const closeSafariPrompt = document.getElementById('close-safari-prompt');
             
-            // Show prompt after a short delay to ensure the page is loaded
-            setTimeout(() => {
-                safariPrompt.classList.remove('hidden');
-            }, 2000);
+            // Show prompt immediately when main content is shown
+            safariPrompt.classList.remove('hidden');
+            safariPrompt.classList.add('active');
             
+            // Add event listener for close button
             closeSafariPrompt.addEventListener('click', () => {
+                safariPrompt.classList.remove('active');
                 safariPrompt.classList.add('hidden');
             });
+
+            // Store in localStorage that we've shown the prompt
+            localStorage.setItem('safariPromptShown', 'true');
         } else {
             // Handle regular PWA install prompt
             let deferredPrompt;
