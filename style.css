@@ -923,4 +923,52 @@ section {
 .notification-prompt {
     position: relative;
     z-index: 1;
+}
+
+/* Add to Home Screen Prompt */
+.add-to-home-prompt {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.add-to-home-prompt i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.add-to-home-prompt p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Footer */
+.site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    text-align: center;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.site-footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+/* Adjust main content padding to account for footer */
+#main-content {
+    padding-bottom: 4rem;
 } 
