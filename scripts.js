@@ -1,5 +1,5 @@
 // Constants
-const BIRTHDAY_DATE = new Date('2025-05-31T22:50:00');
+const BIRTHDAY_DATE = new Date('2025-05-31T23:05:00');
 const BIRTHDAY_SONG_URL = ''; // Add your birthday song URL here
 
 // DOM Elements
@@ -67,6 +67,11 @@ function showMainContent() {
     mainContent.classList.add('active', 'fade-in');
     audioPlayer.classList.remove('hidden');
     showNotification();
+    showInstallPrompt();
+    // Ensure floating hearts continue
+    if (!window.floatingHeartsInterval) {
+        initializeFloatingHearts();
+    }
 }
 
 function showExpiredMessage() {
@@ -197,9 +202,11 @@ function initializeCandle() {
 // Confetti Effect
 function triggerConfetti() {
     confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 50,
+        spread: 50,
+        origin: { y: 0.6 },
+        disableForReducedMotion: true,
+        ticks: 200
     });
 }
 
@@ -296,9 +303,24 @@ function initializeAudioMessage() {
 
 // Form Handling
 function initializeForm() {
+    const submitButton = wishesForm.querySelector('.submit-button');
+    
+    // Check if form was already submitted
+    if (localStorage.getItem('wishesSubmitted') === 'true') {
+        // Show success message if already submitted
+        const successMessage = document.createElement('div');
+        successMessage.className = 'form-success active';
+        successMessage.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <h3>Your wish has been released into the stars! ✨</h3>
+        `;
+        wishesForm.innerHTML = '';
+        wishesForm.appendChild(successMessage);
+        return;
+    }
+
     wishesForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const submitButton = wishesForm.querySelector('.submit-button');
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
@@ -313,16 +335,51 @@ function initializeForm() {
             });
 
             if (response.ok) {
+                // Store submission state
+                localStorage.setItem('wishesSubmitted', 'true');
+                
                 // Show success message
                 const successMessage = document.createElement('div');
                 successMessage.className = 'form-success active';
                 successMessage.innerHTML = `
                     <i class="fas fa-check-circle"></i>
-                    <h3>Thank you for your wishes!</h3>
-                    <p>Your wishes have been sent successfully.</p>
+                    <h3>Your wish has been released into the stars! ✨</h3>
                 `;
                 wishesForm.innerHTML = '';
                 wishesForm.appendChild(successMessage);
+                
+                // Wait for success message to be visible
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Fade out success message
+                successMessage.classList.add('fade-out');
+                
+                // Wait for fade out animation
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                // Remove success message
+                successMessage.remove();
+                
+                // Blow out the candle
+                const flame = document.querySelector('.flame');
+                flame.classList.add('blown');
+                
+                // Wait for candle animation
+                await new Promise(resolve => setTimeout(resolve, 300));
+                
+                // Show birthday message
+                const birthdayMessage = document.createElement('div');
+                birthdayMessage.className = 'birthday-message';
+                birthdayMessage.innerHTML = `
+                    <h2>HAPPY BIRTHDAY!</h2>
+                    <p>May all your wishes come true! 🎂✨</p>
+                `;
+                wishesForm.appendChild(birthdayMessage);
+                
+                // Trigger confetti with a slight delay
+                setTimeout(() => {
+                    triggerConfetti();
+                }, 100);
             } else {
                 throw new Error('Wishes submission failed');
             }
@@ -370,48 +427,50 @@ function initializePWA() {
     };
 
     // Show appropriate prompt based on browser
-    if (isSafari() && isIOS() && !isStandalone()) {
-        console.log('Safari on iOS detected and not installed');
-        const safariPrompt = document.getElementById('safari-install-prompt');
-        const closeSafariPrompt = document.getElementById('close-safari-prompt');
-        
-        // Show prompt after a short delay to ensure the page is loaded
-        setTimeout(() => {
-            safariPrompt.classList.remove('hidden');
-        }, 2000);
-        
-        closeSafariPrompt.addEventListener('click', () => {
-            safariPrompt.classList.add('hidden');
-        });
-    } else {
-        // Handle regular PWA install prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
+    function showInstallPrompt() {
+        if (isSafari() && isIOS() && !isStandalone()) {
+            console.log('Safari on iOS detected and not installed');
+            const safariPrompt = document.getElementById('safari-install-prompt');
+            const closeSafariPrompt = document.getElementById('close-safari-prompt');
             
-            // Show our custom install prompt
-            installPrompt.classList.remove('hidden');
-            installPrompt.classList.add('active');
-        });
+            // Show prompt after a short delay to ensure the page is loaded
+            setTimeout(() => {
+                safariPrompt.classList.remove('hidden');
+            }, 2000);
+            
+            closeSafariPrompt.addEventListener('click', () => {
+                safariPrompt.classList.add('hidden');
+            });
+        } else {
+            // Handle regular PWA install prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show our custom install prompt
+                installPrompt.classList.remove('hidden');
+                installPrompt.classList.add('active');
+            });
 
-        // Handle install button click
-        installButton.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null;
+            // Handle install button click
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                    installPrompt.classList.remove('active');
+                    installPrompt.classList.add('hidden');
+                }
+            });
+
+            // Handle close button click
+            closeInstallPrompt.addEventListener('click', () => {
                 installPrompt.classList.remove('active');
                 installPrompt.classList.add('hidden');
-            }
-        });
-
-        // Handle close button click
-        closeInstallPrompt.addEventListener('click', () => {
-            installPrompt.classList.remove('active');
-            installPrompt.classList.add('hidden');
-        });
+            });
+        }
     }
 
     // Hide prompt if app is already installed
@@ -425,8 +484,13 @@ function initializePWA() {
 // Notifications
 function initializeNotifications() {
     if ('Notification' in window) {
-        // Request permission if not already granted
-        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+        // Check if app is installed
+        const isStandalone = () => {
+            return window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        };
+
+        // Only show notification prompt if app is not installed
+        if (!isStandalone() && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
             // Show a custom prompt first
             const notificationPrompt = document.createElement('div');
             notificationPrompt.className = 'notification-prompt';
@@ -565,7 +629,7 @@ function initializeFloatingHearts() {
     }
     
     // Create hearts periodically
-    setInterval(createHeart, 1000);
+    window.floatingHeartsInterval = setInterval(createHeart, 1000);
     
     // Create initial batch of hearts
     for (let i = 0; i < 5; i++) {
