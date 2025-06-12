@@ -367,15 +367,60 @@ section {
     transform: scale(1.1);
 }
 
-/* Expired Message */
-.expired-container {
+/* Expired Section */
+#expired-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 2rem;
     text-align: center;
-    padding: 4rem 2rem;
+}
+
+.expired-message {
     background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 4rem auto;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.expired-message h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.expired-message p {
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.expired-message button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+}
+
+.expired-message button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.3);
 }
 
 /* Responsive Design */

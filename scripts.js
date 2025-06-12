@@ -32,57 +32,94 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFloatingHearts();
 });
 
-// Countdown Timer
-function initializeCountdown() {
-    function updateCountdown() {
-        const now = new Date();
-        const difference = BIRTHDAY_DATE - now;
+// Initialize countdown
+let countdownInterval;
 
-        if (difference <= 0) {
-            clearInterval(countdownInterval);
-            showMainContent();
-            return;
-        }
+function updateCountdown() {
+    const now = new Date();
+    const birthday = new Date(2025, 5, 9); // June 9th, 2025
+    const diff = birthday - now;
 
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        daysElement.textContent = String(days).padStart(2, '0');
-        hoursElement.textContent = String(hours).padStart(2, '0');
-        minutesElement.textContent = String(minutes).padStart(2, '0');
-        secondsElement.textContent = String(seconds).padStart(2, '0');
+    if (diff <= 0) {
+        clearInterval(countdownInterval);
+        showMainContent();
+        return;
     }
 
-    const countdownInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('days').textContent = String(days).padStart(2, '0');
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 }
 
-// Content Management
 function showMainContent() {
-    countdownSection.classList.remove('active');
-    countdownSection.classList.add('hidden');
-    mainContent.classList.remove('hidden');
-    mainContent.classList.add('active', 'fade-in');
-    audioPlayer.classList.remove('hidden');
-    showNotification();
+    const countdownSection = document.getElementById('countdown-section');
+    const expiredSection = document.getElementById('expired-section');
+    const mainContent = document.getElementById('main-content');
+
+    // First hide everything
+    if (countdownSection) {
+        countdownSection.classList.remove('active');
+        countdownSection.classList.add('hidden');
+    }
     
-    // Show install prompt immediately when main content is shown
-    showInstallPrompt();
-    
-    // Ensure floating hearts continue
-    if (!window.floatingHeartsInterval) {
-        initializeFloatingHearts();
+    if (mainContent) {
+        mainContent.classList.remove('active');
+        mainContent.classList.add('hidden');
+    }
+
+    // Then show expired section
+    if (expiredSection) {
+        expiredSection.classList.remove('hidden');
+        expiredSection.classList.add('active');
     }
 }
 
-function showExpiredMessage() {
-    countdownSection.classList.add('hidden');
-    mainContent.classList.add('hidden');
-    expiredSection.classList.remove('hidden');
-    expiredSection.classList.add('active', 'fade-in');
+function continueToGift() {
+    const expiredSection = document.getElementById('expired-section');
+    const mainContent = document.getElementById('main-content');
+
+    if (expiredSection) {
+        expiredSection.classList.remove('active');
+        expiredSection.classList.add('hidden');
+    }
+
+    if (mainContent) {
+        mainContent.classList.remove('hidden');
+        mainContent.classList.add('active');
+    }
 }
+
+function checkBirthday() {
+    const now = new Date();
+    const birthday = new Date(2025, 5, 9); // June 9th, 2025
+
+    if (now >= birthday) {
+        showMainContent();
+        return true;
+    }
+    return false;
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if birthday has passed
+    if (checkBirthday()) {
+        // If birthday has passed, stop any existing countdown
+        if (countdownInterval) {
+            clearInterval(countdownInterval);
+        }
+    } else {
+        // Start countdown only if birthday hasn't passed
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+    }
+});
 
 // Updated Candle and Form Handling
 function initializeCandle() {
@@ -594,8 +631,6 @@ function checkDate() {
     oneDayAfter.setDate(oneDayAfter.getDate() + 1);
 
     if (now > oneDayAfter) {
-        showExpiredMessage();
-    } else if (afterBirthday) {
         showMainContent();
         showNotification(); // Show notification when birthday arrives
     }
@@ -640,33 +675,4 @@ function initializeFloatingHearts() {
     for (let i = 0; i < 5; i++) {
         createHeart();
     }
-}
-
-function checkBirthday() {
-    const now = new Date();
-    const birthday = new Date(2025, 5, 9); // June 9th, 2025
-
-    if (now >= birthday) {
-        // Birthday has passed
-        document.getElementById('countdown-section').classList.remove('active');
-        document.getElementById('countdown-section').classList.add('hidden');
-        document.getElementById('expired-section').classList.remove('hidden');
-        document.getElementById('expired-section').classList.add('active');
-        document.getElementById('main-content').classList.remove('hidden');
-        document.getElementById('main-content').classList.add('active');
-        return true;
-    }
-    return false;
-}
-
-// Call checkBirthday immediately when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    if (checkBirthday()) {
-        // If birthday has passed, stop the countdown
-        clearInterval(countdownInterval);
-    } else {
-        // Start countdown only if birthday hasn't passed
-        updateCountdown();
-        countdownInterval = setInterval(updateCountdown, 1000);
-    }
-}); 
+} 
